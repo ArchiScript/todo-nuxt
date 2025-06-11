@@ -66,6 +66,10 @@ import Search from '@/components/svg/Search.vue'
 import { useColorMode } from '@vueuse/core'
 
 const store = useTodoStore()
+
+onMounted(() => {
+  store.loadFromStorage()
+})
 const showForm = ref(false)
 const search = ref('')
 const editTodo = ref<Todo | null>(null)
