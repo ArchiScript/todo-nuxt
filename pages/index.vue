@@ -38,8 +38,11 @@
         @edit="startEdit"
       />
     </ul>
-
-    <button :class="$style.addButton" @click="showForm = true">➕</button>
+    <div :class="$style.addButtonContainer">
+       <button :class="$style.addButton" @click="showForm = true"><span :class="$style.addIcon"></span></button>
+    </div>
+   
+    
     <TodoForm 
       v-if="showForm"
       :initial="editTodo?.text ?? ''"
@@ -70,7 +73,6 @@ const editTodo = ref<Todo | null>(null)
 const mode = useColorMode()
 const isDark = computed(() => mode.value === 'dark')
 
-console.log('isDark', isDark.value)
 
 function add(text: string) {
   if (editTodo.value) {
@@ -108,6 +110,8 @@ function cancel() {
   margin: 2rem auto;
   font-family: 'Kanit', 'Inter', Arial;
   position: relative;
+  height: 100px;
+  min-height: 100vh;
 }
 
 .title {
@@ -162,17 +166,22 @@ function cancel() {
   align-items: center;
   
 }
-
-.addButton {
+.addButtonContainer{
+  width: 750px;
+  margin: 0 auto;
   position: fixed;
+  bottom: 0;
+}
+.addButton {
+  position: absolute;
   bottom: 2rem;
-  right: 2rem;
+  right: 0;
   background-color: #6c63ff;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 50px;
+  height: 50px;
   font-size: 1.8rem;
   display: flex;
   align-items: center;
@@ -180,6 +189,7 @@ function cancel() {
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: background-color 0.3s;
+
 }
 
 .addButton:hover {
@@ -205,6 +215,23 @@ function cancel() {
 .searchIcon.dark {
   color: #fff;
 }
-
+.addIcon{
+  position: relative;
+  width: 3px;
+  height: 24px;
+ background-color: #fff;
+ border-radius: 2px;
+}
+.addIcon::before{
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 3px;
+  background-color: #fff;
+  top: 50%;
+  left: -11px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
 
 </style>

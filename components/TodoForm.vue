@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.modal">
-    <div :class="$style.dialog">
-      <h2 :class="$style.title">NEW NOTE</h2>
+    <div :class="[$style.dialog, isDark ? $style.dark : '']">
+      <h2 :class="[$style.title, isDark ? $style.titleLight : '']">NEW NOTE</h2>
       <input
         :class="$style.input"
         type="text"
@@ -9,7 +9,7 @@
         placeholder="Input your note..."
       />
       <div :class="$style.btnRow">
-        <button :class="$style.btnCancel" @click="$emit('cancel')">CANCEL</button>
+        <button :class="[$style.btnCancel, isDark ? $style.btnCancelDark : '']" @click="$emit('cancel')">CANCEL</button>
         <button :class="$style.btnApply" @click="submitNote">APPLY</button>
       </div>
     </div>
@@ -17,7 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
+import { useColorMode } from '@vueuse/core'
+const mode = useColorMode()
+const isDark = computed(() => mode.value === 'dark')
 
 const emit = defineEmits(['submit', 'cancel'])
 const noteText = ref('')
@@ -38,6 +41,7 @@ function submitNote() {
   justify-content: center;
   align-items: center;
   z-index: 50;
+  
 }
 
 .dialog {
@@ -49,12 +53,20 @@ function submitNote() {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
+.dark {
+  background-color: #252525;
+  color: #f0f0f0;
+  border: 1px solid white;
+}
 
 .title {
   margin-bottom: 1rem;
   font-size: 1.2rem;
   font-weight: 700;
   color: #333;
+}
+.titleLight{
+  color: #f0f0f0;
 }
 
 .input {
@@ -93,6 +105,9 @@ function submitNote() {
   background-color: white;
   color: #6c63ff;
   border-color: #6c63ff;
+}
+.btnCancelDark{
+  background-color: transparent;
 }
 
 .btnCancel:hover {

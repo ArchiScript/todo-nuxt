@@ -34,5 +34,6 @@ export const useTodoStore = defineStore('todo', {
     updateFilter(newFilter: 'all' | 'completed' | 'in-process') {
       this.filter = newFilter
     }
-  }
+  },
+
 })
