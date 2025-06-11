@@ -4,13 +4,16 @@
       :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
       @click="toggleTheme"
     >
-      <span v-if="isDark">🌞</span>
-      <span v-else>🌜</span>
+      <span v-if="isDark"><DaySign/></span>
+      <span v-else><NightSign/></span>
     </button>
   </template>
   
   <script setup lang="ts">
   import { useColorMode } from '@vueuse/core'
+  import DaySign from '@/components/svg/DaySign.vue'
+  import NightSign from '@/components/svg/NightSign.vue'
+  
   
   const mode = useColorMode()
   const isDark = computed(() => mode.value === 'dark')

@@ -18,7 +18,7 @@ export const useTodoStore = defineStore('todo', {
   },
   actions: {
     addTodo(text: string) {
-      this.todos.push({ id: crypto.randomUUID(), text, completed: false })
+      this.todos.push({ id: crypto.randomUUID(), text: text.toUpperCase(), completed: false })
     },
     removeTodo(id: string) {
       this.todos = this.todos.filter(todo => todo.id !== id)
@@ -29,7 +29,7 @@ export const useTodoStore = defineStore('todo', {
     },
     updateTodo(id: string, newText: string) {
       const todo = this.todos.find(t => t.id === id)
-      if (todo) todo.text = newText
+      if (todo) todo.text = newText.toUpperCase()
     },
     updateFilter(newFilter: 'all' | 'completed' | 'in-process') {
       this.filter = newFilter

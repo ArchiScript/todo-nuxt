@@ -3,21 +3,30 @@
     <h1 :class="$style.title">TODO LIST</h1>
 
     <div :class="$style.topBar">
+      <div :class="$style.inputWrapper">
       <input
         v-model="search"
         :class="$style.input"
         placeholder="Search note..."
       />
-      <TodoFilter />
+      <Search :class="[$style.searchIcon, isDark ? $style.dark : '']" />
+      
+      </div>
+      <!-- <TodoFilter /> -->
+       <TodoFilter
+          v-model="store.filter"
+          :options="[
+            { value: 'all', label: 'ALL' },
+            { value: 'completed', label: 'COMPLETED' },
+            { value: 'in-process', label: 'IN PROCESS' }
+          ]"
+        />
       <ThemeToggle />
     </div>
 
     <div v-if="store.isEmpty" :class="$style.emptyState">
-      <img
-        src="/assets/images/Detective-check-footprint 1.svg"
-        :class="$style.emptyImage"
-        alt="Empty"
-      />
+      <EmptyImage v-if="!isDark" :class="$style.emptyImage" />
+      <EmptyImageDark v-else :class="$style.emptyImage" />
       <p :class="$style.emptyText">Empty...</p>
     </div>
 
@@ -48,11 +57,20 @@ import TodoForm from '@/components/TodoForm.vue'
 import TodoFilter from '@/components/TodoFilter.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import type { Todo } from '@/types/todo'
+import EmptyImage from '@/components/svg/EmptyImage.vue'
+import EmptyImageDark from '@/components/svg/EmptyImageDark.vue'
+import Search from '@/components/svg/Search.vue'
+import { useColorMode } from '@vueuse/core'
 
 const store = useTodoStore()
 const showForm = ref(false)
 const search = ref('')
 const editTodo = ref<Todo | null>(null)
+
+const mode = useColorMode()
+const isDark = computed(() => mode.value === 'dark')
+
+console.log('isDark', isDark.value)
 
 function add(text: string) {
   if (editTodo.value) {
@@ -83,35 +101,39 @@ function cancel() {
 
 <style module>
 .container {
-  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  min-width: 750px;
   margin: 2rem auto;
-  padding: 1.5rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Kanit', 'Inter', Arial;
   position: relative;
 }
 
 .title {
   text-align: center;
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 500;
   margin-bottom: 1rem;
 }
 
 .topBar {
   display: flex;
-  gap: 0.5rem;
+  max-width: 100%;
+  gap: 16px;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
 .input {
   flex-grow: 1;
-  padding: 0.6rem 1rem;
+  padding: 11px 40px 11px 16px;
   border: 1px solid #c3bdf0;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 1rem;
   outline: none;
   transition: border 0.2s;
+  position: relative;
 }
 
 .input:focus {
@@ -125,19 +147,20 @@ function cancel() {
 }
 
 .emptyImage {
-  width: 130px;
+  width: 221px;
   margin: 0 auto 1rem;
 }
 
 .emptyText {
-  font-size: 1rem;
+  font-size: 20px;
   color: #888;
 }
 
 .todoList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  
 }
 
 .addButton {
@@ -162,4 +185,26 @@ function cancel() {
 .addButton:hover {
   background-color: #584ee4;
 }
+.inputWrapper {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+.searchIcon {
+  height: 20px;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  color:var(--primary-color);
+}
+.searchIcon.dark {
+  color: #fff;
+}
+
+
 </style>
