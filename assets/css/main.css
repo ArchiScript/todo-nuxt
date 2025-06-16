@@ -1,6 +1,7 @@
 :root {
   --primary-color: #6C63FF;
   --dropdown-bg: #F1F1F1;
+  --loader: #b140a2;
 }
 *{
   box-sizing: border-box;

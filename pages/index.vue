@@ -1,4 +1,7 @@
 <template>
+  <div v-if="store.loading"  :class="$style.loaderWrapper">
+    <Loader v-if="store.loading" :class="$style.loader" />
+  </div>
   <div :class="$style.container">
     <h1 :class="$style.title">TODO LIST</h1>
 
@@ -59,6 +62,7 @@ import TodoItem from '@/components/TodoItem.vue'
 import TodoForm from '@/components/TodoForm.vue'
 import TodoFilter from '@/components/TodoFilter.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import  Loader  from '@/components/Loader.vue'
 import type { Todo } from '@/types/todo'
 import EmptyImage from '@/components/svg/EmptyImage.vue'
 import EmptyImageDark from '@/components/svg/EmptyImageDark.vue'
@@ -67,8 +71,11 @@ import { useColorMode } from '@vueuse/core'
 
 const store = useTodoStore()
 
+// onMounted(() => {
+//   store.loadFromStorage()
+// })
 onMounted(() => {
-  store.loadFromStorage()
+  store.fetchTodos()
 })
 const showForm = ref(false)
 const search = ref('')
@@ -90,7 +97,7 @@ function add(text: string) {
 
 const filtered = computed(() =>
   store.filteredTodos.filter(todo =>
-    todo.text.toLowerCase().includes(search.value.toLowerCase())
+  todo?.text.toLowerCase().includes((search?.value ?? '').toLowerCase())
   )
 )
 
@@ -117,7 +124,18 @@ function cancel() {
   height: 100px;
   min-height: 100vh;
 }
-
+.loaderWrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1000;
+}
 .title {
   text-align: center;
   font-size: 26px;

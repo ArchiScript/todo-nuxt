@@ -1,12 +1,16 @@
 import { defineStore } from 'pinia'
-import type { Todo } from '@/types/todo'
+import type { Todo, CreateTodo, PatchTodo } from '@/types/todo'
+import { todosService } from '~/lib/feathersClient'
+import type { ServiceMethods } from '~/types/feathersService'
 import { onMounted } from 'vue'
 
 
 export const useTodoStore = defineStore('todo', {
   state: () => ({
     todos: [] as Todo[],
-    filter: 'all' as 'all' | 'completed' | 'in-process'
+    testTodos: [] as Todo[],
+    filter: 'all' as 'all' | 'completed' | 'in-process',
+    loading: false as boolean
   }),
   getters: {
     filteredTodos(state): Todo[] {
@@ -19,6 +23,13 @@ export const useTodoStore = defineStore('todo', {
     }
   },
   actions: {
+    async fetchTodos() {
+      this.loading = true
+      const response = await todosService.find()
+      console.log('Fetched test todos:', response)
+      this.todos = Array.isArray(response.data) ? response.data : [response.data]
+      this.loading = false
+    },
     loadFromStorage() {
       if (import.meta.client) {
         try {
@@ -38,35 +49,49 @@ export const useTodoStore = defineStore('todo', {
         }
       }
     },
-    addTodo(text: string) {
-      this.todos.push({ id: crypto.randomUUID(), text: text.toUpperCase(), completed: false })
-      this.saveTodos()
+   async addTodo(text: string) {
+    this.loading = true
+      const newPaginatedTodo =  await todosService.create({ text: text.toUpperCase(), completed: false } )
+      this.todos.push(newPaginatedTodo)
+      this.loading = false
     },
-    removeTodo(id: string) {
+
+    async removeTodo(id: string) {
+      this.loading = true
       this.todos = this.todos.filter(todo => todo.id !== id)
-      this.saveTodos()
+      await todosService.remove(id)
+      this.loading = false
     },
-    toggleTodo(id: string) {
+
+   async toggleTodo(id: string) {
+      this.loading = true
       const todo = this.todos.find(t => t.id === id)
       if (todo) todo.completed = !todo.completed
-      this.saveTodos()
+     await todosService.patch(id, { completed: todo?.completed } as PatchTodo)
+      this.loading = false
     },
-    updateTodo(id: string, newText: string) {
+
+   async updateTodo(id: string, newText: string) {
+      this.loading = true
       const todo = this.todos.find(t => t.id === id)
       if (todo) todo.text = newText.toUpperCase()
-      this.saveTodos()
+     await todosService.patch(id, { text: newText.toUpperCase() } as PatchTodo)
+      this.loading = false
     },
-    updateFilter(newFilter: 'all' | 'completed' | 'in-process') {
+
+   async updateFilter(newFilter: 'all' | 'completed' | 'in-process') {
       this.filter = newFilter
       if (import.meta.client) {
         localStorage.setItem('todos-filter', newFilter)
       }
     },
-     saveTodos() {
+     saveTodosLocal() {
       if (import.meta.client) {
         localStorage.setItem('todos', JSON.stringify(this.todos))
       }
     }
+
+
   },
 
 })

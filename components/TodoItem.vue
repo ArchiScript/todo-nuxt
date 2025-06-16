@@ -13,7 +13,7 @@
       {{ todo.text }}
     </span>
     </div>
-    <div :class="$btnWrapper">
+    <div :class="$style.btnWrapper">
       <button :class="$style.iconBtn" @click="emit('edit', todo)"><Pencil/></button>
     <button :class="$style.iconBtn" @click="store.removeTodo(todo.id)"><Trash/></button>
     </div>
@@ -41,6 +41,11 @@ const store = useTodoStore()
   padding: 1rem 0;
   border-bottom: 1px solid #d6d6ff;
   width: 520px;
+}
+
+.btnWrapper {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .checkboxWrapper {
