@@ -71,9 +71,7 @@ import { useColorMode } from '@vueuse/core'
 
 const store = useTodoStore()
 
-// onMounted(() => {
-//   store.loadFromStorage()
-// })
+
 onMounted(() => {
   store.fetchTodos()
 })

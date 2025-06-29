@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import type { Todo, CreateTodo, PatchTodo } from '@/types/todo'
 import { todosService } from '~/lib/feathersClient'
+import { todosSocketService } from '~/lib/feathersSocket.client'
 import type { ServiceMethods } from '~/types/feathersService'
 import { onMounted } from 'vue'
+
 
 
 export const useTodoStore = defineStore('todo', {
@@ -25,7 +27,7 @@ export const useTodoStore = defineStore('todo', {
   actions: {
     async fetchTodos() {
       this.loading = true
-      const response = await todosService.find()
+      const response = await todosSocketService.find()
       console.log('Fetched test todos:', response)
       this.todos = Array.isArray(response.data) ? response.data : [response.data]
       this.loading = false

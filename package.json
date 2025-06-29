@@ -11,13 +11,18 @@
   },
   "dependencies": {
     "@feathersjs/rest-client": "^5.0.34",
+    "@feathersjs/socketio-client": "^5.0.34",
     "@nuxt/fonts": "^0.11.4",
     "@pinia/nuxt": "^0.11.1",
     "@vueuse/core": "^13.3.0",
     "axios": "^1.10.0",
     "nuxt": "^3.17.5",
     "pinia": "^3.0.3",
+    "socket.io-client": "^4.8.1",
     "vue": "^3.5.16",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/socket.io-client": "^1.4.36"
   }
 }
